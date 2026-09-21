@@ -75,6 +75,11 @@ details.glossary[open] summary:after{content:'Приховати'}
 .num{text-align:right;font-variant-numeric:tabular-nums}
 .toggle-btn{border:1px solid var(--border);background:#fff;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;color:var(--accent-dark);margin:12px 0}
 .toggle-btn:hover{background:rgba(52,209,134,.12)}
+.table-wrap.collapsible:not(.expanded) tbody tr:nth-child(n+16){display:none}
+.insight-group{margin-bottom:8px}
+.insight-group-title{font-size:10px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-weight:700;padding:16px 0 8px;border-top:1px solid var(--border);margin-top:8px}
+.insight-group:first-child .insight-group-title{border-top:none;padding-top:0;margin-top:0}
+.insight-subgroup{font-size:14px;font-weight:600;margin:12px 0 8px;color:var(--accent-dark)}
 .hidden{display:none !important}
 @media(max-width:980px){
   .layout{grid-template-columns:1fr}
@@ -232,22 +237,16 @@ details.glossary[open] summary:after{content:'Приховати'}
 
     <section class="section" id="ops-complaints">
       <h2>Скарги клієнтів</h2>
-      <p class="lead">Усі замовлення VARUS зі зверненням у підтримку за період співпраці (з травня). Нижче — динаміка за обрану гранулярність, реєстр ордерів і вигрузка в Excel.</p>
+      <p class="lead">Динаміка тікетів за обрану гранулярність. Усі звернення за період співпраці (з травня) можна завантажити в Excel.</p>
       <div class="grid-4" id="complaintKpis"></div>
       <div class="card" style="margin-top:14px"><div class="chart-box"><canvas id="cComplaints"></canvas></div></div>
       <h3>Категорії скарг за період на графіку</h3>
       <div class="table-wrap" id="complaintTable"></div>
       <h3>Топ магазинів за скаргами (обрана гранулярність)</h3>
       <div class="table-wrap" id="complaintStoreTable"></div>
-      <h3>Реєстр скарг (весь період співпраці)</h3>
-      <div class="filters">
-        <input id="complaintSearch" type="search" placeholder="Пошук: магазин, місто, номер, причина">
-        <button type="button" class="toggle-btn" id="btnComplaintsXls" style="margin:0">Завантажити Excel зі всіма скаргами</button>
-      </div>
-      <div class="note" id="complaintListNote"></div>
-      <div class="table-wrap sticky-first" id="complaintOrdersTable"></div>
+      <button type="button" class="toggle-btn" id="btnComplaintsXls">Завантажити Excel зі всіма скаргами</button>
       <details class="glossary"><summary>Глосарій — Скарги</summary>
-        <div class="gloss-item"><b>Скарга</b>Замовлення, на яке клієнт відкрив тікет у підтримку. В Excel — усі такі ордери з травня, включно з недоставленими.</div>
+        <div class="gloss-item"><b>Скарга</b>Замовлення, на яке клієнт відкрив тікет у підтримку. Excel містить усі такі ордери з травня, включно з недоставленими.</div>
         <div class="gloss-item"><b>Ticket-rate</b>Частка доставлених замовлень із тікетом (у блоці KPI — last complete період).</div>
         <div class="gloss-item"><b>Категорії</b>З причини атрибуції. Найчастіше «відсутні / неправильні позиції» — це комплектація / OOS, навіть якщо актор на круговій діаграмі «клієнт».</div>
         <div class="gloss-item"><b>Низька оцінка їжі</b>Оцінка товару 3 або нижче. Це не завжди тікет.</div>
@@ -276,9 +275,11 @@ details.glossary[open] summary:after{content:'Приховати'}
       <h2>Асортимент</h2>
       <p class="lead">Групи — українською з дерева SCT. <b>Кількість</b> — позицію зменшили або прибрали (немає на полиці). <b>Заміни</b> — поклали інший SKU замість замовленого. Це різні події: заміна не входить в ODR групи. Median SKU і session availability — у таблиці Операційний Overview.</p>
       <h3>Проблемні групи товарів (SCT)</h3>
-      <div class="table-wrap" id="groupsTable"></div>
+      <div class="table-wrap collapsible" id="groupsTable"></div>
+      <button type="button" class="toggle-btn hidden" id="groupsMoreBtn">Показати ще</button>
       <h3>Проблемні SKU (топ за постраждалими замовленнями)</h3>
-      <div class="table-wrap" id="skusTable"></div>
+      <div class="table-wrap collapsible" id="skusTable"></div>
+      <button type="button" class="toggle-btn hidden" id="skusMoreBtn">Показати ще</button>
       <details class="glossary"><summary>Глосарій — Асортимент</summary>
         <div class="gloss-item"><b>Група товарів</b>Категорія дерева асортименту (SCT), українською. «Різне / змішані» — службова корзина таксономії: товари без вузької групи (часто вагові овочі/фрукти та мікс).</div>
         <div class="gloss-item"><b>Замовлення</b>Скільки унікальних доставлених ордерів містили хоча б одну позицію з цієї групи.</div>
@@ -312,9 +313,9 @@ details.glossary[open] summary:after{content:'Приховати'}
 
     <section class="section" id="insights">
       <h2>Ключові висновки для зустрічі</h2>
-      <p class="lead">Pain points last complete vs previous complete. Неповний місяць (вересень*) не входить у KPI.</p>
-      <div id="insightList"></div>
+      <p class="lead">Pain points last complete vs previous complete. Неповний місяць (вересень*) не входить у KPI. Блоки нижче повторюють навігацію: Фінанси → Операції → Магазини.</p>
       <div class="grid-6" id="kpiCards"></div>
+      <div id="insightList"></div>
     </section>
   </div>
 </div>
@@ -505,9 +506,25 @@ details.glossary[open] summary:after{content:'Приховати'}
     const qL = lastComplete(b.quality), qP = prevComplete(b.quality);
     const usersL = lastComplete(b.users), usersP = prevComplete(b.users);
     const skuL = lastComplete(b.sku_median), skuP = prevComplete(b.sku_median);
-    const html = [];
-    const push = (cls, title, text) => {
-      html.push(`<div class="insight ${cls}"><div class="insight-title">${title}</div><div class="insight-text">${text}</div></div>`);
+    const buckets = {
+      fin: [],
+      opsOverview: [],
+      opsFailed: [],
+      opsBad: [],
+      opsComplaints: [],
+      opsOdr: [],
+      opsSku: [],
+      stores: []
+    };
+    const push = (key, cls, title, text) => {
+      buckets[key].push(`<div class="insight ${cls}"><div class="insight-title">${title}</div><div class="insight-text">${text}</div></div>`);
+    };
+    const block = (title, items, kind) => {
+      if (!items.length) return '';
+      const head = kind === 'nav'
+        ? `<div class="insight-group-title">${title}</div>`
+        : `<h3 class="insight-subgroup">${title}</h3>`;
+      return `<div class="insight-group">${head}${items.join('')}</div>`;
     };
 
     const peak = (fin || []).filter(r => !isInc(r.period)).reduce((best, r) => {
@@ -515,95 +532,30 @@ details.glossary[open] summary:after{content:'Приховати'}
       return best;
     }, null);
     if (finL && peak && finL.period !== peak.period) {
-      push('warn',
+      push('fin', 'warn',
         `GMV нижче піку: ${uah(finL.gmv_uah)} проти ${uah(peak.gmv_uah)} у тижні/місяці ${labelPeriod(peak.period)} (${deltaPct(finL.gmv_uah, peak.gmv_uah)})`,
         `${labelPeriod(finL.period)}: ${fmt(finL.orders)} замовлень, AOV items ${n(finL.aov_items_uah, 0)} ₴. Від піку мережа не повернулась до того обсягу — це головний фінансовий сигнал на зустріч.`);
     } else if (finL && finP) {
       const g = Number(finL.gmv_uah) - Number(finP.gmv_uah);
-      push(g < 0 ? 'warn' : 'good',
+      push('fin', g < 0 ? 'warn' : 'good',
         `GMV ${g < 0 ? 'знизився' : 'зріс'} ${deltaPct(finL.gmv_uah, finP.gmv_uah)}`,
         `${labelPeriod(finP.period)} → ${labelPeriod(finL.period)}: ${uah(finP.gmv_uah)} → ${uah(finL.gmv_uah)} · Orders ${fmt(finP.orders)} → ${fmt(finL.orders)} · AOV ${n(finP.aov_items_uah, 0)} → ${n(finL.aov_items_uah, 0)} ₴.`);
     }
 
-    if (failL) {
-      const csProv = (b.failed_reasons || []).filter(r => r.period === failL.period && String(r.fail_reason) === 'manually_failed_by_cs' && String(r.actor_type) === 'provider');
-      const csCnt = csProv.reduce((s, r) => s + Number(r.cnt || 0), 0);
-      const csShare = failL.failed_total ? csCnt * 100 / failL.failed_total : 0;
-      push((failL.failed_rate_total || 0) > 8 ? 'warn' : 'action',
-        `Failed Rate ${pct(failL.failed_rate_total)} ${deltaPp(failL.failed_rate_total, failP && failP.failed_rate_total, true)} — майже все це CS, не тайм-аут планшета`,
-        `Втрачено ${uah(failL.lost_gmv_uah)} за ${labelPeriod(failL.period)}. Merchant-прапорці лише ${pct(failL.failed_merchant_rate)} (точка формально приймає). Підтримка скасувала з виною на заклад ${fmt(csCnt)} ордерів (${n(csShare, 0)}% фейлів). Потрібен розбір CS-причин: немає товару після прийняття, точка «не збирає», клієнт чекає занадто довго.`);
-    }
-
-    if (odrL) {
-      push((odrL.odr_pct || 0) > 40 ? 'warn' : '',
-        `ODR ${pct(odrL.odr_pct)} ${deltaPp(odrL.odr_pct, odrP && odrP.odr_pct, true)} — дефект комплектації на більшості ордерів`,
-        `${fmt(odrL.odr_orders)} з ${fmt(odrL.delivered_orders)} доставлених мали зміну кількості/ваги/ціни. Replacement ${pct(odrL.order_repl_pct)} (окремо). Session SKU availability при цьому ${pct(opsL && opsL.sku_availability_pct)}: каталог «зелений», а полиця/збірка — ні. Це розрив стоп-листів і залишків.`);
-    }
-
-    const groups = b.groups || [];
-    if (groups.length) {
-      const top = groups.slice(0, 3).map(g => `${g.category} (ODR ${pct(g.odr_pct)}, заміни ${fmt(g.repl_orders)})`).join('; ');
-      push('action',
-        'Товарні групи з найбільшим болем комплектації',
-        `${top}. «Кількість» = зняли/зменшили SKU. «Заміни» = поклали інший товар. Пакети-майки роздувають заміни; кола/вода — реальний OOS.`);
-    }
-
-    const skus = b.skus || [];
-    const cola = skus.filter(s => /cola|pepsi|кола|пепсі/i.test(s.item_name || '')).slice(0, 3);
-    const bags = skus.filter(s => /пакет|майка/i.test(s.item_name || '')).slice(0, 2);
-    if (cola.length || bags.length) {
-      push('action',
-        'SKU: пакети ламають заміни, газована вода — OOS',
-        `${bags.length ? 'Пакети в топі постраждалих ордерів через заміну SKU пакета (не OOS полиці). ' : ''}${cola.length ? 'Реальний out of stock: ' + cola.map(s => `${(s.item_name || '').slice(0, 42)} — qty ${pct(s.qty_pct)}`).join('; ') + '.' : ''}`);
-    }
-
-    if (qL) {
-      push((qL.late_delivery_rate || 0) > 25 ? 'warn' : '',
-        `Запізнення до клієнта ${pct(qL.late_delivery_rate)} · середній час ${n(qL.avg_delivery_min, 0)} хв · Honey лише ${pct(qL.honey_rate)}`,
-        `Bad orders ${pct(qL.bad_rate)} ${deltaPp(qL.bad_rate, qP && qP.bad_rate, true)}. Late >10 хв: ${fmt(qL.late_10min)} ордерів. На круговій bad — найбільший шматок «Партнер» (довга збірка) плюс «Нестача курʼєрів». Availability мережі ${pct(opsL && opsL.availability_rate)} ${deltaPp(opsL && opsL.availability_rate, opsP && opsP.availability_rate)}: частина точок була офлайн.`);
-    }
-
-    if (qL) {
-      const ticketsAll = D.complaint_order_count;
-      push('',
-        `Скарги: ticket-rate ${pct(qL.ticket_rate)} (${fmt(qL.tickets)} тікетів за ${labelPeriod(qL.period)}) · низькі оцінки ≤3: ${fmt(qL.low_food_ratings)}`,
-        `За весь період співпраці в реєстрі ${fmt(ticketsAll)} звернень (кнопка Excel у блоці «Скарги»). Домінує «відсутні / неправильні позиції» — це той самий біль, що ODR, тільки вже з тікетом і компенсаціями.`);
-    }
-
     if (usersL) {
-      push((usersL.retention_rate || 100) < 35 ? 'action' : '',
+      push('fin', (usersL.retention_rate || 100) < 35 ? 'action' : '',
         `Конверсія сесії ${pct(usersL.conversion_rate)} · утримання ${pct(usersL.retention_rate)} ${deltaPp(usersL.retention_rate, usersP && usersP.retention_rate)}`,
         `Viewed ${fmt(usersL.sessions_viewed)} → Ordered ${fmt(usersL.sessions_ordered)}. Retained ${fmt(usersL.retained_users)} з ${fmt(usersL.prior_active_users)} попереднього періоду. Activated ${fmt(finL && finL.users_activated)} vs ${fmt(finP && finP.users_activated)} раніше. Високий ODR і fail бʼють по повторних покупках.`);
     }
 
-    if (skuL && skuP) {
-      push(Number(skuL.median_available_sku) < Number(skuP.median_available_sku) ? 'action' : '',
-        `Медіана доступних SKU ${fmt(skuL.median_available_sku)} ${deltaPct(skuL.median_available_sku, skuP.median_available_sku)}`,
-        `Каталог на live-точках стискається. Разом із ODR 66% це не «мало SKU в меню», а нестабільна наявність того, що клієнт уже бачить.`);
-    }
-
     const lastP = finL && finL.period;
     if (lastP) {
-      const stores = (b.stores || []).filter(r => r.period === lastP && Number(r.orders || 0) >= 20);
-      const worstOdr = [...stores].sort((a, c) => Number(c.odr_pct || 0) - Number(a.odr_pct || 0)).slice(0, 3);
-      const worstFail = [...(b.stores || []).filter(r => r.period === lastP && Number(r.total_placed || r.orders || 0) >= 15)]
-        .sort((a, c) => Number(c.failed_rate || 0) - Number(a.failed_rate || 0)).slice(0, 3);
-      if (worstOdr.length) {
-        push('action',
-          'Магазини-аутлайери за ODR (від 20 замовлень)',
-          worstOdr.map(s => `${s.provider_name || s.provider_id} (${s.city_name || '—'}): ODR ${pct(s.odr_pct)}, ${fmt(s.orders)} ord.`).join(' · '));
-      }
-      if (worstFail.length && Number(worstFail[0].failed_rate || 0) > 15) {
-        push('warn',
-          'Магазини з аномальним Failed %',
-          worstFail.map(s => `${s.provider_name || s.provider_id}: fail ${pct(s.failed_rate)}`).join(' · ') + '. Перевірити години, auto-accept і чи точка реально збирає після прийняття.');
-      }
       const cities = (b.city || []).filter(r => r.period === lastP).sort((a, c) => Number(c.gmv_uah || 0) - Number(a.gmv_uah || 0));
       if (cities.length >= 2) {
         const tot = cities.reduce((s, r) => s + Number(r.gmv_uah || 0), 0);
         const top2 = cities.slice(0, 2);
         const share = tot ? (Number(top2[0].gmv_uah) + Number(top2[1].gmv_uah)) * 100 / tot : 0;
-        push('',
+        push('fin', '',
           `Концентрація: ${top2[0].city_name} + ${top2[1].city_name} = ${n(share, 0)}% GMV`,
           top2.map(c => `${c.city_name}: ${uah(c.gmv_uah)}, ${fmt(c.orders)} ord.`).join(' · ') + '. Операційні дірки в цих двох містах визначають мережевий P&L.');
       }
@@ -612,13 +564,96 @@ details.glossary[open] summary:after{content:'Приховати'}
     if (opsL) {
       const dark = Number(opsL.active_stores || 0) - Number(opsL.stores_with_orders || 0);
       if (dark > 0) {
-        push('action',
+        push('opsOverview', 'action',
           `${fmt(dark)} live-магазинів без жодного delivered за ${labelPeriod(opsL.period)}`,
           `Active stores ${fmt(opsL.active_stores)}, зі замовленнями ${fmt(opsL.stores_with_orders)}. Hidden/Archived уже виключені. Це «мертві» ready_for_work точки — або зона/меню, або фактично не працюють.`);
       }
+      push('opsOverview', Number(opsL.availability_rate) < 95 ? 'warn' : '',
+        `Availability ${pct(opsL.availability_rate)} ${deltaPp(opsL.availability_rate, opsP && opsP.availability_rate)} · SKU availability ${pct(opsL.sku_availability_pct)}`,
+        `Acceptance ${pct(opsL.acceptance_rate)} · Rating ${n(opsL.avg_rating, 2)}. Частина точок була офлайн — це бʼє по GMV і failed.`);
     }
 
-    document.getElementById('insightList').innerHTML = html.join('') || '<div class="insight">Недостатньо даних для висновків.</div>';
+    if (failL) {
+      const csProv = (b.failed_reasons || []).filter(r => r.period === failL.period && String(r.fail_reason) === 'manually_failed_by_cs' && String(r.actor_type) === 'provider');
+      const csCnt = csProv.reduce((s, r) => s + Number(r.cnt || 0), 0);
+      const csShare = failL.failed_total ? csCnt * 100 / failL.failed_total : 0;
+      push('opsFailed', (failL.failed_rate_total || 0) > 8 ? 'warn' : 'action',
+        `Failed Rate ${pct(failL.failed_rate_total)} ${deltaPp(failL.failed_rate_total, failP && failP.failed_rate_total, true)} — майже все це CS, не тайм-аут планшета`,
+        `Втрачено ${uah(failL.lost_gmv_uah)} за ${labelPeriod(failL.period)}. Merchant-прапорці лише ${pct(failL.failed_merchant_rate)} (точка формально приймає). Підтримка скасувала з виною на заклад ${fmt(csCnt)} ордерів (${n(csShare, 0)}% фейлів). Потрібен розбір CS-причин: немає товару після прийняття, точка «не збирає», клієнт чекає занадто довго.`);
+    }
+
+    if (qL) {
+      push('opsBad', (qL.late_delivery_rate || 0) > 25 ? 'warn' : '',
+        `Bad ${pct(qL.bad_rate)} ${deltaPp(qL.bad_rate, qP && qP.bad_rate, true)} · запізнення ${pct(qL.late_delivery_rate)} · Honey лише ${pct(qL.honey_rate)}`,
+        `Середній час ${n(qL.avg_delivery_min, 0)} хв. Late >10 хв: ${fmt(qL.late_10min)} ордерів. На круговій діаграмі найбільший шматок — «Партнер» (довга збірка) плюс «Нестача курʼєрів».`);
+    }
+
+    if (qL) {
+      const ticketsAll = D.complaint_order_count;
+      push('opsComplaints', '',
+        `Ticket-rate ${pct(qL.ticket_rate)} (${fmt(qL.tickets)} тікетів за ${labelPeriod(qL.period)}) · низькі оцінки ≤3: ${fmt(qL.low_food_ratings)}`,
+        `За період співпраці ${fmt(ticketsAll)} звернень — кнопка Excel у блоці «Скарги». Домінує «відсутні / неправильні позиції»: той самий біль, що ODR, уже з компенсаціями.`);
+    }
+
+    if (odrL) {
+      push('opsOdr', (odrL.odr_pct || 0) > 40 ? 'warn' : '',
+        `ODR ${pct(odrL.odr_pct)} ${deltaPp(odrL.odr_pct, odrP && odrP.odr_pct, true)} — дефект комплектації на більшості ордерів`,
+        `${fmt(odrL.odr_orders)} з ${fmt(odrL.delivered_orders)} доставлених мали зміну кількості/ваги/ціни. Replacement ${pct(odrL.order_repl_pct)} (окремо). Session SKU availability ${pct(opsL && opsL.sku_availability_pct)}: каталог «зелений», а полиця/збірка — ні.`);
+    }
+
+    const groups = b.groups || [];
+    if (groups.length) {
+      const top = groups.slice(0, 3).map(g => `${g.category} (ODR ${pct(g.odr_pct)}, заміни ${fmt(g.repl_orders)})`).join('; ');
+      push('opsSku', 'action',
+        'Товарні групи з найбільшим болем комплектації',
+        `${top}. «Кількість» = зняли/зменшили SKU. «Заміни» = поклали інший товар. Пакети-майки роздувають заміни; кола/вода — реальний OOS.`);
+    }
+
+    const skus = b.skus || [];
+    const cola = skus.filter(s => /cola|pepsi|кола|пепсі/i.test(s.item_name || '')).slice(0, 3);
+    const bags = skus.filter(s => /пакет|майка/i.test(s.item_name || '')).slice(0, 2);
+    if (cola.length || bags.length) {
+      push('opsSku', 'action',
+        'SKU: пакети ламають заміни, газована вода — OOS',
+        `${bags.length ? 'Пакети в топі постраждалих ордерів через заміну SKU пакета (не OOS полиці). ' : ''}${cola.length ? 'Реальний out of stock: ' + cola.map(s => `${(s.item_name || '').slice(0, 42)} — qty ${pct(s.qty_pct)}`).join('; ') + '.' : ''}`);
+    }
+
+    if (skuL && skuP) {
+      push('opsSku', Number(skuL.median_available_sku) < Number(skuP.median_available_sku) ? 'action' : '',
+        `Медіана доступних SKU ${fmt(skuL.median_available_sku)} ${deltaPct(skuL.median_available_sku, skuP.median_available_sku)}`,
+        `Каталог на live-точках стискається. Разом із високим ODR це не «мало SKU в меню», а нестабільна наявність того, що клієнт уже бачить.`);
+    }
+
+    if (lastP) {
+      const stores = (b.stores || []).filter(r => r.period === lastP && Number(r.orders || 0) >= 20);
+      const worstOdr = [...stores].sort((a, c) => Number(c.odr_pct || 0) - Number(a.odr_pct || 0)).slice(0, 3);
+      const worstFail = [...(b.stores || []).filter(r => r.period === lastP && Number(r.total_placed || r.orders || 0) >= 15)]
+        .sort((a, c) => Number(c.failed_rate || 0) - Number(a.failed_rate || 0)).slice(0, 3);
+      if (worstOdr.length) {
+        push('stores', 'action',
+          'Магазини-аутлайери за ODR (від 20 замовлень)',
+          worstOdr.map(s => `${s.provider_name || s.provider_id} (${s.city_name || '—'}): ODR ${pct(s.odr_pct)}, ${fmt(s.orders)} ord.`).join(' · '));
+      }
+      if (worstFail.length && Number(worstFail[0].failed_rate || 0) > 15) {
+        push('stores', 'warn',
+          'Магазини з аномальним Failed %',
+          worstFail.map(s => `${s.provider_name || s.provider_id}: fail ${pct(s.failed_rate)}`).join(' · ') + '. Перевірити години, auto-accept і чи точка реально збирає після прийняття.');
+      }
+    }
+
+    const opsHtml = block('Overview', buckets.opsOverview, 'sub')
+      + block('Failed Orders', buckets.opsFailed, 'sub')
+      + block('Bad Orders', buckets.opsBad, 'sub')
+      + block('Скарги клієнтів', buckets.opsComplaints, 'sub')
+      + block('Order Defect Rate', buckets.opsOdr, 'sub')
+      + block('Асортимент', buckets.opsSku, 'sub');
+    const html = [
+      block('Фінанси', buckets.fin, 'nav'),
+      opsHtml ? `<div class="insight-group"><div class="insight-group-title">Операції</div>${opsHtml}</div>` : '',
+      block('Магазини', buckets.stores, 'nav')
+    ].filter(Boolean).join('') || '<div class="insight">Недостатньо даних для висновків.</div>';
+
+    document.getElementById('insightList').innerHTML = html;
 
     const kpis = [
       { label: 'GMV', value: uah(finL && finL.gmv_uah), sub: deltaPct(finL && finL.gmv_uah, finP && finP.gmv_uah) },
@@ -888,24 +923,45 @@ details.glossary[open] summary:after{content:'Приховати'}
     });
     cs += '</tbody></table>';
     document.getElementById('complaintStoreTable').innerHTML = storeRows.length ? cs : '<div class="note">Немає скарг за last complete період.</div>';
-    paintComplaintOrders();
+  }
+
+  function bindCollapse(wrapId, btnId, extra) {
+    const wrap = document.getElementById(wrapId);
+    const btn = document.getElementById(btnId);
+    wrap.classList.add('collapsible');
+    wrap.classList.remove('expanded');
+    if (extra > 0) {
+      btn.classList.remove('hidden');
+      btn.textContent = 'Показати ще ' + extra;
+      btn.onclick = () => {
+        const on = wrap.classList.toggle('expanded');
+        btn.textContent = on ? 'Показати лише топ-15' : 'Показати ще ' + extra;
+      };
+    } else {
+      btn.classList.add('hidden');
+      btn.onclick = null;
+    }
   }
 
   function renderSkuOdr() {
     const b = bucket();
+    const groupRows = b.groups || [];
     let gt = '<table><thead><tr><th>Група товарів</th><th>Замовлення</th><th>Із дефектом</th><th>ODR, %</th><th>Заміни</th><th>Кількість</th><th>Вага</th></tr></thead><tbody>';
-    (b.groups || []).slice(0, 40).forEach(r => {
+    groupRows.forEach(r => {
       gt += `<tr><td>${r.category || '—'}</td><td class="num">${fmt(r.cat_orders)}</td><td class="num">${fmt(r.defect_orders)}</td><td class="num">${pct(r.odr_pct)}</td><td class="num">${fmt(r.repl_orders)}</td><td class="num">${fmt(r.qty_defects)}</td><td class="num">${fmt(r.weight_defects)}</td></tr>`;
     });
     gt += '</tbody></table>';
     document.getElementById('groupsTable').innerHTML = gt;
+    bindCollapse('groupsTable', 'groupsMoreBtn', Math.max(0, groupRows.length - 15));
 
+    const skuRows = b.skus || [];
     let st = '<table><thead><tr><th>Товар</th><th>Замовлення</th><th>Постраждалі</th><th>Кількість %</th><th>Заміни %</th><th>Вага %</th></tr></thead><tbody>';
-    (b.skus || []).slice(0, 80).forEach(r => {
+    skuRows.forEach(r => {
       st += `<tr><td title="${(r.sku || '')}">${(r.item_name || r.sku || '—').slice(0, 80)}</td><td class="num">${fmt(r.sku_orders)}</td><td class="num">${fmt(r.affected_orders)}</td><td class="num">${pct(r.qty_pct)}</td><td class="num">${pct(r.repl_pct)}</td><td class="num">${pct(r.weight_pct)}</td></tr>`;
     });
     st += '</tbody></table>';
     document.getElementById('skusTable').innerHTML = st;
+    bindCollapse('skusTable', 'skusMoreBtn', Math.max(0, skuRows.length - 15));
 
     const odr = b.odr || [];
     const oLast = lastComplete(odr);
@@ -1061,34 +1117,6 @@ details.glossary[open] summary:after{content:'Приховати'}
     const map = { delivered: 'Доставлено', rejected: 'Відхилено', failed: 'Failed', cancelled: 'Скасовано', pending: 'В обробці' };
     return map[String(s || '').toLowerCase()] || s || '—';
   }
-  function paintComplaintOrders() {
-    const q = (document.getElementById('complaintSearch').value || '').toLowerCase();
-    let rows = D.complaint_orders || [];
-    if (q) {
-      rows = rows.filter(r => [r.provider_name, r.city_name, r.order_reference_id, r.reason_uk, r.provider_address]
-        .join(' ').toLowerCase().includes(q));
-    }
-    const shown = rows.slice(0, 80);
-    document.getElementById('complaintListNote').textContent =
-      `Показано ${shown.length} з ${rows.length} (у файлі Excel — усі ${fmt(D.complaint_order_count)} за період співпраці).`;
-    let html = '<table><thead><tr><th>Дата</th><th>Номер</th><th>Статус</th><th>Місто</th><th>Магазин</th><th>Тема</th><th>Причина</th><th>Винуватець</th><th>GMV</th><th>Оцінка</th></tr></thead><tbody>';
-    shown.forEach(r => {
-      html += `<tr>
-        <td>${(r.order_date || '').slice(0, 10)}</td>
-        <td>${r.order_reference_id || '—'}</td>
-        <td>${stateUk(r.order_state)}</td>
-        <td>${r.city_name || ''}</td>
-        <td title="${r.provider_address || ''}">${(r.provider_name || '—').slice(0, 42)}</td>
-        <td>${THEME_LABELS[r.theme] || r.theme || '—'}</td>
-        <td title="${r.reason_uk || ''}">${(r.reason_uk || '—').slice(0, 48)}</td>
-        <td>${ACTOR_LABELS[String(r.actor || '').toLowerCase()] || r.actor || '—'}</td>
-        <td class="num">${uah(r.gmv_uah)}</td>
-        <td class="num">${r.food_rating != null ? n(r.food_rating, 1) : '—'}</td>
-      </tr>`;
-    });
-    html += '</tbody></table>';
-    document.getElementById('complaintOrdersTable').innerHTML = html;
-  }
   function downloadComplaintsXls() {
     const rows = D.complaint_orders || [];
     if (!rows.length) return;
@@ -1152,7 +1180,6 @@ details.glossary[open] summary:after{content:'Приховати'}
   document.getElementById('storePeriodSel').addEventListener('change', paintStores);
   document.getElementById('storeCitySel').addEventListener('change', paintStores);
   document.getElementById('storeSearch').addEventListener('input', paintStores);
-  document.getElementById('complaintSearch').addEventListener('input', paintComplaintOrders);
   document.getElementById('btnComplaintsXls').addEventListener('click', downloadComplaintsXls);
 
   const links = document.querySelectorAll('.nav-link');
